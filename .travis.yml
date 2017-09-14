@@ -94,7 +94,7 @@ before_install:
   - ln -s ~/.ssh/authorized_keys ~/.ssh/authorized_keys2
   - chmod 600 ~/.ssh/*
   - jdk_switcher use oraclejdk8
-  - kube/start_minikube.sh
+  - kube/start_minikube.sh && export PATH=`pwd`:${PATH}
 install:
   - pip install --upgrade pip
   - pip install tox
