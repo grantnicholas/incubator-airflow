@@ -10,4 +10,4 @@ else
     cp $DIRNAME/../dist/apache-airflow-1.9.0.dev0+incubating.tar.gz $DIRNAME/airflow.tar.gz
 fi
 
-eval $(minikube docker-env) && docker build $DIRNAME --tag=${IMAGE}:${TAG}
+eval $(sudo -E minikube docker-env) && docker build $DIRNAME --tag=${IMAGE}:${TAG}
