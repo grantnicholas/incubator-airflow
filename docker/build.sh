@@ -8,9 +8,6 @@ if [ -f $DIRNAME/airflow.tar.gz ]; then
 else
     cd $DIRNAME/../ && python setup.py sdist && cd docker && \
     cp $DIRNAME/../dist/apache-airflow-1.9.0.dev0+incubating.tar.gz $DIRNAME/airflow.tar.gz
-fi
+fi 
 
-sudo -E minikube docker-env
-minikube docker-env
-
-eval $(sudo -E minikube docker-env) && docker build $DIRNAME --tag=${IMAGE}:${TAG}
+docker build $DIRNAME --tag=${IMAGE}:${TAG}
