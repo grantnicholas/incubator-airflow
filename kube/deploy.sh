@@ -5,7 +5,7 @@ TAG=${2:-latest}
 DIRNAME=$(cd "$(dirname "$0")"; pwd)
 
 # create an emptydir for postgres to store it's volume data in
-mkdir -p /data/postgres-airflow
+sudo mkdir -p /data/postgres-airflow
 
 mkdir -p $DIRNAME/.generated
 kubectl apply -f $DIRNAME/postgres.yaml
