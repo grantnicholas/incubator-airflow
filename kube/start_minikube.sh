@@ -21,6 +21,7 @@ sudo -E minikube start --vm-driver=none
 for i in {1..150} # timeout for 5 minutes
 do
    echo "------- Running kubectl get pods -------"
+   echo "where kubectl" && sudo ls /usr/local/bin/ && which kubectl
    kubectl get po &> /dev/null
    if [ $? -ne 1 ]; then
       break
