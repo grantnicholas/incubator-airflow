@@ -20,6 +20,7 @@ sudo -E minikube start --vm-driver=none
 # this for loop waits until kubectl can access the api server that minikube has created
 for i in {1..150} # timeout for 5 minutes
 do
+   echo "------- Running kubectl get pods -------"
    kubectl get po &> /dev/null
    if [ $? -ne 1 ]; then
       break

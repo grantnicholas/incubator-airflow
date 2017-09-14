@@ -15,8 +15,7 @@ sed "s#{{docker_image}}#$IMAGE:$TAG#g" $DIRNAME/airflow.yaml.template > $DIRNAME
 # wait for up to 5 minutes for everything to be deployed
 for i in {1..150}
 do
-  echo "Running kubectl get pods:"
-  echo "---------------------"
+  echo "------- Running kubectl get pods -------"
   PODS=$(kubectl get pods | awk 'NR>1 {print $0}')
   echo "$PODS"
   NUM_AIRFLOW_READY=$(echo $PODS | grep airflow | awk '{print $2}' | grep -E '([0-9])\/(\1)' | wc -l)
