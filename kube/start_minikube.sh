@@ -22,9 +22,7 @@ for i in {1..150} # timeout for 5 minutes
 do
    kubectl get po &> /dev/null
    if [ $? -ne 1 ]; then
-      exit 0
+      break
   fi
   sleep 2
 done
-
-exit 1
