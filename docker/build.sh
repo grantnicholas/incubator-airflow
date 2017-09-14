@@ -1,12 +1,15 @@
+set -e 
+
 IMAGE=grantnicholas/kubeairflow
 TAG=${1:-latest}
+DIRNAME=$(cd "$(dirname "$0")"; pwd)
 
-if [ -f airflow.tar.gz ]; then
+
+if [ -f $DIRNAME/airflow.tar.gz ]; then
     echo "Not rebuilding airflow source"
 else
-    cd ../ && python setup.py sdist && cd docker && \
-    cp ../dist/apache-airflow-1.9.0.dev0+incubating.tar.gz airflow.tar.gz
+    cd $DIRNAME/../ && python setup.py sdist && cd docker && \
+    cp $DIRNAME/../dist/apache-airflow-1.9.0.dev0+incubating.tar.gz $DIRNAME/airflow.tar.gz
 fi
 
-docker build . --tag=${IMAGE}:${TAG}
-docker push ${IMAGE}:${TAG}
+eval $(minikube docker-env) && docker build $DIRNAME --tag=${IMAGE}:${TAG}

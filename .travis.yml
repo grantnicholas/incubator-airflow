@@ -94,8 +94,7 @@ before_install:
   - ln -s ~/.ssh/authorized_keys ~/.ssh/authorized_keys2
   - chmod 600 ~/.ssh/*
   - jdk_switcher use oraclejdk8
-  - travis/start_minikube.sh && export PATH=`pwd`:${PATH}
-  - kubectl get all --all-namespaces
+  - kube/start_minikube.sh
 install:
   - pip install --upgrade pip
   - pip install tox
@@ -105,6 +104,8 @@ before_script:
   - psql -c 'create database airflow;' -U postgres
   - export PATH=${PATH}:/tmp/hive/bin
 script:
+  - docker/build.sh 
+  - kube/deploy.sh 
   - pip --version
   - ls -l $HOME/.wheelhouse
   - tox --version
