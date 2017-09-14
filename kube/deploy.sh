@@ -4,6 +4,9 @@ IMAGE=${1:-grantnicholas/kubeairflow}
 TAG=${2:-latest}
 DIRNAME=$(cd "$(dirname "$0")"; pwd)
 
+# create an emptydir for postgres to store it's volume data in
+mkdir -p /data/postgres-airflow
+
 mkdir -p $DIRNAME/.generated
 kubectl apply -f $DIRNAME/postgres.yaml
 sed "s#{{docker_image}}#$IMAGE:$TAG#g" $DIRNAME/airflow.yaml.template > $DIRNAME/.generated/airflow.yaml && kubectl apply -f $DIRNAME/.generated/airflow.yaml
