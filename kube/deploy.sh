@@ -1,5 +1,3 @@
-set -e 
-
 IMAGE=${1:-grantnicholas/kubeairflow}
 TAG=${2:-latest}
 DIRNAME=$(cd "$(dirname "$0")"; pwd)

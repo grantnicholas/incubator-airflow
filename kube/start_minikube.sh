@@ -1,5 +1,3 @@
-set -e 
-
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube
 curl -Lo kubectl  https://storage.googleapis.com/kubernetes-release/release/v1.7.0/bin/linux/amd64/kubectl && chmod +x kubectl
 
@@ -21,7 +19,6 @@ sudo -E minikube start --vm-driver=none
 for i in {1..150} # timeout for 5 minutes
 do
    echo "------- Running kubectl get pods -------"
-   echo "where kubectl" && sudo ls /usr/local/bin/ && which kubectl
    kubectl get po &> /dev/null
    if [ $? -ne 1 ]; then
       break
