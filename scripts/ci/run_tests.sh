@@ -39,4 +39,4 @@ if [ "${TRAVIS}" ]; then
 fi
 
 echo Backend: $AIRFLOW__CORE__SQL_ALCHEMY_CONN
-./run_unit_tests.sh
+./run_unit_tests.sh $@

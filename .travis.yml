@@ -88,6 +88,8 @@ matrix:
       env: TOX_ENV=py34-hdp-airflow_backend_postgres
     - python: "3.4"
       env: RUN_KUBE_INTEGRATION=true
+  #allow_failures:
+  #  - env: RUN_KUBE_INTEGRATION=true
 cache:
   directories:
     - $HOME/.wheelhouse/

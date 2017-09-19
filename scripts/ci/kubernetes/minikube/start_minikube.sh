@@ -1,6 +1,7 @@
 # Guard against a kubernetes cluster already being up
-kubectl get po &> /dev/null
-if [ $? -ne 1 ]; then
+kubectl get pods &> /dev/null
+if [ $? -eq 0 ]; then
+  echo "kubectl get pods returned 0 exit code, exiting early"
   exit 0
 fi
 #

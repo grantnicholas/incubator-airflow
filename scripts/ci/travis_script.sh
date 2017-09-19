@@ -1,10 +1,21 @@
 DIRNAME=$(cd "$(dirname "$0")"; pwd)
-AIRFLOW_ROOT="$DIRNAME/../../.."
-cd $AIRFLOW_ROOT
+AIRFLOW_ROOT="$DIRNAME/../.."
+cd $AIRFLOW_ROOT && pip --version && ls -l $HOME/.wheelhouse && tox --version
 
 if [ -z "$RUN_KUBE_INTEGRATION" ];
 then
-  pip --version && ls -l $HOME/.wheelhouse && tox --version && tox -e $TOX_ENV
+  tox -e $TOX_ENV
 else
-  $DIRNAME/kubernetes/setup_kubernetes.sh && nosetests tests.contrib.executors.integration
+  $DIRNAME/kubernetes/setup_kubernetes.sh && \
+  tox -e $TOX_ENV -- nosetests tests.contrib.executors.integration \
+                     --with-coverage \
+                     --cover-erase \
+                     --cover-html \
+                     --cover-package=airflow \
+                     --cover-html-dir=airflow/www/static/coverage \
+                     --with-ignore-docstrings \
+                     --rednose \
+                     --with-timer \
+                     -v \
+                     --logging-level=DEBUG
 fi
