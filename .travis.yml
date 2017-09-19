@@ -58,6 +58,8 @@ env:
 #    - TOX_ENV=py34-hdp-airflow_backend_mysql
 #    - TOX_ENV=py34-hdp-airflow_backend_sqlite
 #    - TOX_ENV=py34-hdp-airflow_backend_postgres
+    # Run integration tests on minikube for the KubernetesExecutor
+    - RUN_KUBE_INTEGRATION=true
 matrix:
   exclude:
     - python: "3.4"
@@ -84,6 +86,8 @@ matrix:
       env: TOX_ENV=py34-hdp-airflow_backend_sqlite
     - python: "2.7"
       env: TOX_ENV=py34-hdp-airflow_backend_postgres
+    - python: "3.4"
+      env: RUN_KUBE_INTEGRATION=true
 cache:
   directories:
     - $HOME/.wheelhouse/
@@ -94,7 +98,6 @@ before_install:
   - ln -s ~/.ssh/authorized_keys ~/.ssh/authorized_keys2
   - chmod 600 ~/.ssh/*
   - jdk_switcher use oraclejdk8
-  - kube/start_minikube.sh
 install:
   - pip install --upgrade pip
   - pip install tox
@@ -104,11 +107,6 @@ before_script:
   - psql -c 'create database airflow;' -U postgres
   - export PATH=${PATH}:/tmp/hive/bin
 script:
-  - docker/build.sh 
-  - kube/deploy.sh 
-  - pip --version
-  - ls -l $HOME/.wheelhouse
-  - tox --version
-  - tox -e $TOX_ENV
+  - ./scripts/ci/travis_script.sh
 after_success:
   - codecov

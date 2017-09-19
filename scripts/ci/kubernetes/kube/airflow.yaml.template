@@ -40,8 +40,9 @@ spec:
           {
               "name": "init",
               "image": "{{docker_image}}",
+              "imagePullPolicy": "IfNotPresent",
               "command": [
-                "bash", "-cx", "rm -rf $AIRFLOW_HOME/dags/.git && cd $AIRFLOW_HOME/dags && git init && git remote add origin https://github.com/grantnicholas/testdags.git && git fetch origin master && git reset --hard origin/master && cd /usr/local/lib/python2.7/dist-packages/airflow && airflow initdb && alembic upgrade head"
+                "bash", "-cx", "cd /usr/local/lib/python2.7/dist-packages/airflow && cp -R example_dags/* $AIRFLOW_HOME/dags/ && airflow initdb && alembic upgrade head"
               ],
               "env": [
                 {"name": "AIRFLOW__KUBERNETES__CONTAINER_IMAGE", "value": ""},
@@ -57,6 +58,7 @@ spec:
       containers:
       - name: web
         image: {{docker_image}}
+        imagePullPolicy: IfNotPresent
         ports:
         - name: web
           containerPort: 8080
@@ -100,6 +102,7 @@ spec:
             port: 8080
       - name: scheduler
         image: {{docker_image}}
+        imagePullPolicy: IfNotPresent
         args: ["scheduler"]
         env:
         - name: AIRFLOW_KUBE_NAMESPACE

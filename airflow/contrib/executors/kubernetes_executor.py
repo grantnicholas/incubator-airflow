@@ -376,6 +376,8 @@ class KubernetesExecutor(BaseExecutor):
         self.task_queue.put((key, command))
 
     def sync(self):
+        self.logger.info("self.running: {}".format(self.running))
+        self.logger.info("self.queued: {}".format(self.queued_tasks))
         self.kub_client.sync()
 
         last_resource_version = None
