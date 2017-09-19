@@ -6,7 +6,7 @@ if [ -z "$RUN_KUBE_INTEGRATION" ];
 then
   tox -e $TOX_ENV
 else
-  echo "TOX_ENV: $TOX_ENV" && $DIRNAME/kubernetes/setup_kubernetes.sh && \
+  $DIRNAME/kubernetes/setup_kubernetes.sh && \
   tox -e $TOX_ENV -- nosetests tests.contrib.executors.integration \
                      --with-coverage \
                      --cover-erase \
