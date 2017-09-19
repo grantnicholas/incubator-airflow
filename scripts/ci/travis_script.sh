@@ -7,7 +7,7 @@ then
   tox -e $TOX_ENV
 else
   $DIRNAME/kubernetes/setup_kubernetes.sh && \
-  tox -e $TOX_ENV -- nosetests tests.contrib.executors.integration \
+  tox -e $TOX_ENV -- tests.contrib.executors.integration \
                      --with-coverage \
                      --cover-erase \
                      --cover-html \
