@@ -17,8 +17,8 @@ import unittest
 import re
 import string
 import random
+import pytz
 from datetime import datetime
-
 try:
     from airflow.contrib.executors.kubernetes_executor import AirflowKubernetesScheduler
 except ImportError:
@@ -62,6 +62,14 @@ class TestAirflowKubernetesScheduler(unittest.TestCase):
     @unittest.skipIf(AirflowKubernetesScheduler is None, "kubernetes python package is not installed")
     def test_execution_date_serialize_deserialize(self):
         datetime_obj = datetime.now()
+        serialized_datetime = AirflowKubernetesScheduler._datetime_to_label_safe_datestring(datetime_obj)
+        new_datetime_obj = AirflowKubernetesScheduler._label_safe_datestring_to_datetime(serialized_datetime)
+
+        self.assertEquals(datetime_obj, new_datetime_obj)
+
+    @unittest.skipIf(AirflowKubernetesScheduler is None, "kubernetes python package is not installed")
+    def test_execution_date_serialize_deserialize_with_timezones(self):
+        datetime_obj = datetime.now(pytz.utc)
         serialized_datetime = AirflowKubernetesScheduler._datetime_to_label_safe_datestring(datetime_obj)
         new_datetime_obj = AirflowKubernetesScheduler._label_safe_datestring_to_datetime(serialized_datetime)
 
