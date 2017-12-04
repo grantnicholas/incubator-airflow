@@ -1624,7 +1624,7 @@ class SchedulerJobTest(unittest.TestCase):
         self.assertEqual(ti.state, State.NONE)
 
         ti2 = dr2.get_task_instance(task_id=op1.task_id, session=session)
-        self.assertEqual(ti2.state, State.SCHEDULED)
+        self.assertEqual(ti2.state, State.NONE)
 
     @provide_session
     def evaluate_dagrun(
@@ -2826,7 +2826,8 @@ class SchedulerJobTest(unittest.TestCase):
         session.merge(dr1)
         session.commit()
 
-        self.assertEquals(0, len(scheduler.reset_state_for_orphaned_tasks(session=session)))
+        reset_tis = scheduler.reset_state_for_orphaned_tasks(session=session)
+        self.assertEquals(1, len(reset_tis))
 
     def test_reset_orphaned_tasks_backfill_dag(self):
         dag_id = 'test_reset_orphaned_tasks_backfill_dag'
@@ -2847,7 +2848,8 @@ class SchedulerJobTest(unittest.TestCase):
         session.commit()
 
         self.assertTrue(dr1.is_backfill)
-        self.assertEquals(0, len(scheduler.reset_state_for_orphaned_tasks(session=session)))
+        reset_tis = scheduler.reset_state_for_orphaned_tasks(session=session)
+        self.assertEquals(1, len(reset_tis))
 
     def test_reset_orphaned_tasks_specified_dagrun(self):
         """Try to reset when we specify a dagrun and ensure nothing else is."""
