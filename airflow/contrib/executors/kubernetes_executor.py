@@ -357,23 +357,27 @@ class AirflowKubernetesScheduler(LoggingMixin, object):
     @staticmethod
     def _label_safe_datestring_to_datetime(string):
         """
-        Kubernetes doesn't permit ":" in labels. ISO datetime format uses ":" but not "_", let's
-        replace ":" with "_"
+        From kubernetes:
+        A valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character
 
+        Convert the label safe datestring back to a datetime object (with timezone awareness)
         :param string: string
         :return: datetime.datetime object
         """
-        return parser.parse(string.replace("_", ":"))
+        return parser.parse(string.replace("_", ":").replace("plus", "+"))
 
     @staticmethod
     def _datetime_to_label_safe_datestring(datetime_obj):
         """
-        Kubernetes doesn't like ":" in labels, since ISO datetime format uses ":" but not "_" let's
-        replace ":" with "_"
+        From kubernetes:
+        A valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character
+
+        Convert the datetime object  (with timezone awareness) to a kubernetes label safe datestring
+
         :param datetime_obj: datetime.datetime object
         :return: ISO-like string representing the datetime
         """
-        return datetime_obj.isoformat().replace(":", "_")
+        return datetime_obj.isoformat().replace(":", "_").replace("+", "plus")
 
     def _labels_to_key(self, labels):
         try:
