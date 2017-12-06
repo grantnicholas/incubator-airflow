@@ -22,9 +22,10 @@ DIRNAME=$(cd "$(dirname "$0")"; pwd)
 # create an emptydir for postgres to store it's volume data in
 sudo mkdir -p /data/postgres-airflow
 
+# validate=false because the files may contain kube 1.8 specific keys that kube 1.7 will error out with
 mkdir -p $DIRNAME/.generated
-kubectl apply -f $DIRNAME/postgres.yaml
-sed -e "s#{{docker_image}}#$IMAGE#g" -e "s#{{docker_tag}}#$TAG#g" $DIRNAME/airflow.yaml.template > $DIRNAME/.generated/airflow.yaml && kubectl apply -f $DIRNAME/.generated/airflow.yaml
+kubectl apply -f $DIRNAME/postgres.yaml --validate=false
+sed -e "s#{{docker_image}}#$IMAGE#g" -e "s#{{docker_tag}}#$TAG#g" $DIRNAME/airflow.yaml.template > $DIRNAME/.generated/airflow.yaml && kubectl apply -f $DIRNAME/.generated/airflow.yaml --validate=false
 
 # wait for up to 10 minutes for everything to be deployed
 for i in {1..150}
