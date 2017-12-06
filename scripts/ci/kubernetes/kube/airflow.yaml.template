@@ -30,6 +30,7 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/data/airflow-dags"
+    type: DirectoryOrCreate
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1

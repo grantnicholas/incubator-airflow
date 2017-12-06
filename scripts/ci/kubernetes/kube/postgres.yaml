@@ -26,6 +26,7 @@ spec:
     storage: 5Gi
   hostPath:
     path: /data/postgres-airflow
+    type: DirectoryOrCreate
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1

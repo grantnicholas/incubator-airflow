@@ -60,7 +60,8 @@ env:
 #    - TOX_ENV=py34-hdp-airflow_backend_sqlite
 #    - TOX_ENV=py34-hdp-airflow_backend_postgres
     # Run integration tests on minikube for the KubernetesExecutor
-    - TOX_ENV=py27-cdh-airflow_backend_postgres RUN_KUBE_INTEGRATION=true
+    - TOX_ENV=py27-cdh-airflow_backend_postgres KUBERNETES_VERSION=v1.7.0
+    - TOX_ENV=py27-cdh-airflow_backend_postgres KUBERNETES_VERSION=v1.8.0
 matrix:
   exclude:
     - python: "3.4"
@@ -87,10 +88,18 @@ matrix:
       env: TOX_ENV=py34-hdp-airflow_backend_sqlite
     - python: "2.7"
       env: TOX_ENV=py34-hdp-airflow_backend_postgres
+    # Exclude all python 3.4 kubernetes integration tests  
     - python: "3.4"
-      env: TOX_ENV=py34-cdh-airflow_backend_postgres RUN_KUBE_INTEGRATION=true
+      env: TOX_ENV=py27-cdh-airflow_backend_postgres KUBERNETES_VERSION=v1.7.0
+    - python: "3.4"
+      env: TOX_ENV=py27-cdh-airflow_backend_postgres KUBERNETES_VERSION=v1.8.0
+    - python: "3.4"
+      env: TOX_ENV=py34-cdh-airflow_backend_postgres KUBERNETES_VERSION=v1.7.0
+    - python: "3.4"
+      env: TOX_ENV=py34-cdh-airflow_backend_postgres KUBERNETES_VERSION=v1.8.0
   allow_failures:
-    - env: TOX_ENV=py27-cdh-airflow_backend_postgres RUN_KUBE_INTEGRATION=true
+    - env: TOX_ENV=py27-cdh-airflow_backend_postgres KUBERNETES_VERSION=v1.7.0
+    - env: TOX_ENV=py27-cdh-airflow_backend_postgres KUBERNETES_VERSION=v1.8.0
 cache:
   directories:
     - $HOME/.wheelhouse/
