@@ -23,7 +23,7 @@ if [ $? -eq 0 ]; then
 fi
 #
 
-curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.21.0/minikube-linux-amd64 && chmod +x minikube
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.24.1/minikube-linux-amd64 && chmod +x minikube
 curl -Lo kubectl  https://storage.googleapis.com/kubernetes-release/release/${KUBERNETES_VERSION}/bin/linux/amd64/kubectl && chmod +x kubectl
 
 sudo mkdir -p /usr/local/bin
@@ -39,8 +39,7 @@ touch $HOME/.kube/config
 
 export KUBECONFIG=$HOME/.kube/config
 
-# Dynamic hostpath provisioning takes some effort to setup and is not used, so lets disable it
-sudo -E minikube addons disable default-storageclass
+
 sudo -E minikube start --vm-driver=none --kubernetes-version="${KUBERNETES_VERSION}"
 
 # this for loop waits until kubectl can access the api server that minikube has created
@@ -49,6 +48,8 @@ do
   echo "------- Running kubectl get pods -------"
   kubectl get po &> /dev/null
   if [ $? -ne 1 ]; then
+  	# Dynamic hostpath provisioning takes some effort to setup and is not used, so lets disable it
+    sudo -E minikube addons disable default-storageclass && kubectl delete storageclasses --all
     break
   fi
   sleep 2
