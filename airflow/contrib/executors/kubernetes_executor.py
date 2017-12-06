@@ -476,7 +476,7 @@ class KubernetesExecutor(BaseExecutor, LoggingMixin):
             self.kube_config, self.task_queue, self.result_queue, self._session, self.kube_client
         )
         self._inject_secrets()
-        # self.clear_not_launched_queued_tasks()
+        self.clear_not_launched_queued_tasks()
 
 
     def execute_async(self, key, command, queue=None, executor_config=None):
