@@ -48,8 +48,12 @@ do
   echo "------- Running kubectl get pods -------"
   kubectl get po &> /dev/null
   if [ $? -ne 1 ]; then
-  	# Dynamic hostpath provisioning takes some effort to setup and is not used, so lets disable it
-    sudo -E minikube addons disable default-storageclass && kubectl delete storageclasses --all
+  	# Dynamic hostpath provisioning is used in 1.7 to make the volume directories inside the VM
+  	# but with 1.8 and later, we can use hostPath's type config to tell kubernetes to create the data directories if they don't exist
+  	# This is a bit of a hack
+  	if [ $KUBERNETES_VERSION != "v1.7.0" ]; then
+    	sudo -E minikube addons disable default-storageclass && kubectl delete storageclasses --all
+  	fi
     break
   fi
   sleep 2
