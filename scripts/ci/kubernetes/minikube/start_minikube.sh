@@ -39,6 +39,9 @@ touch $HOME/.kube/config
 
 export KUBECONFIG=$HOME/.kube/config
 
+# Working around this issue with minikube v0.24.1: https://github.com/kubernetes/minikube/issues/2280 
+# use kubeadm bootstrapper until it is resolved
+sudo -E minikube config set bootstrapper kubeadm
 
 sudo -E minikube start --vm-driver=none --kubernetes-version="${KUBERNETES_VERSION}"
 
@@ -48,12 +51,18 @@ do
   echo "------- Running kubectl get pods -------"
   kubectl get po &> /dev/null
   if [ $? -ne 1 ]; then
-  	# Dynamic hostpath provisioning is used in 1.7 to make the volume directories inside the VM
-  	# but with 1.8 and later, we can use hostPath's type config to tell kubernetes to create the data directories if they don't exist
-  	# This is a bit of a hack
-  	if [ $KUBERNETES_VERSION != "v1.7.0" ]; then
-    	sudo -E minikube addons disable default-storageclass && kubectl delete storageclasses --all
-  	fi
+  	# We do not need dynamic hostpath provisioning, so disable the default storageclass
+    sudo -E minikube addons disable default-storageclass && kubectl delete storageclasses --all
+
+    # We need to give permission to watch pods to the airflow scheduler. 
+    # The easiest way to do that is by giving admin access to the default serviceaccount (NOT SAFE!)
+    kubectl create clusterrolebinding add-on-cluster-admin   --clusterrole=cluster-admin   --serviceaccount=default:default
+  	
+    # In "v1.7.0" kubernetes doesn't auto-create data directories, so let's manually create them
+    # In "v1.8.0" and later, kubernetes does auto-create the data directories
+    if [ $KUBERNETES_VERSION == "v1.7.0" ]; then
+      mkdir -p /data/postgres-airflow && mkdir -p /data/airflow-dags 
+    fi  
     break
   fi
   sleep 2
