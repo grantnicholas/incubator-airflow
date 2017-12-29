@@ -13,11 +13,10 @@
 # limitations under the License.
 
 
-def _load_kube_config(in_cluster):
+def load_kube_config(in_cluster=True):
     from kubernetes import config, client
     if in_cluster:
         config.load_incluster_config()
-        return client.CoreV1Api()
     else:
         try:
             config.load_kube_config()
@@ -29,4 +28,7 @@ def _load_kube_config(in_cluster):
 
 def get_kube_client(in_cluster=True):
     # TODO: This should also allow people to point to a cluster.
-    return _load_kube_config(in_cluster)
+
+    from kubernetes import client
+    load_kube_config(in_cluster)
+    return client.CoreV1Api()
