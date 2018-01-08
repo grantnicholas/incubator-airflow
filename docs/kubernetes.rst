@@ -24,7 +24,7 @@ Kubernetes Operator
 +--------------+----------------------------------------------------------------+---------------+
 | ``@image``    | docker image you wish to launch. Defaults to dockerhub.io, but fully qualified URLS will point to custom repositories |
 +--------------+----------------------------------------------------------------+---------------+
-| ``@cmnds``  | To start a task in a docker image, we need to tell it what to do. the cmds array is the space seperated bash command that will define the task completed by the container           |
+| ``@cmds``  | To start a task in a docker image, we need to tell it what to do. the cmds array is the space seperated bash command that will define the task completed by the container           |
 +--------------+----------------------------------------------------------------+---------------+
 | ``arguments``   | arguments for your bash command |
 +--------------+----------------------------------------------------------------+---------------+

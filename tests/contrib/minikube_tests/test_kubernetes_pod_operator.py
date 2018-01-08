@@ -23,11 +23,11 @@ from subprocess import check_call
 
 try:
     check_call(["kubectl", "get", "pods"])
-except:
+except Exception as e:
+    print("test exception: {}".format(e))
     raise unittest.SkipTest(
         "Kubernetes integration tests require a minikube cluster; Skipping tests"
     )
-
 
 class KubernetesPodOperatorTest(unittest.TestCase):
 
